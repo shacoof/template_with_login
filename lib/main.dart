@@ -50,6 +50,14 @@ class _MyAppState extends State<MyApp> {
                         child: LoginPage(
                             didProvideCredentials:
                                 _authService.loginWithCredentials,
+                            message: "Pleaes provide credentials",
+                            shouldShowSignUp: _authService.showSignUp)),
+                  if (snapshot.data.authFlowStatus == AuthFlowStatus.failedLogin)
+                    MaterialPage(
+                        child: LoginPage(
+                            didProvideCredentials:
+                                _authService.loginWithCredentials,
+                            message: "Login failed, try again",
                             shouldShowSignUp: _authService.showSignUp)),
 
                   // 5

@@ -4,7 +4,7 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 
 // 1
-enum AuthFlowStatus { login, signUp, verification, session }
+enum AuthFlowStatus { login, signUp, verification, session, failedLogin }
 
 // 2
 class AuthState {
@@ -31,27 +31,33 @@ class AuthService {
     authStateController.add(state);
   }
 
+  void showLoginFailure() {
+    final state = AuthState(authFlowStatus: AuthFlowStatus.failedLogin);
+    authStateController.add(state);
+  }
+
   // 1
 // 1
   void loginWithCredentials(AuthCredentials credentials) async {
-    var loginSuccessful = false;
-    while (!loginSuccessful) {
-      try {
-        // 2
-        final result = await Amplify.Auth.signIn(
-            username: credentials.username, password: credentials.password);
+    try {
+      // 2
+      final result = await Amplify.Auth.signIn(
+          username: credentials.username, password: credentials.password);
 
-        // 3
-        if (result.isSignedIn) {
-          final state = AuthState(authFlowStatus: AuthFlowStatus.session);
-          authStateController.add(state);
-        } else {
-          // 4
-          print('User could not be signed in');
-        }
-      } catch (e) {
-        print('Could not login - ${e.cause}');
+      // 3
+      if (result.isSignedIn) {
+        final state = AuthState(authFlowStatus: AuthFlowStatus.session);
+        authStateController.add(state);
+      } else {
+        // 4
+        final state = AuthState(authFlowStatus: AuthFlowStatus.failedLogin);
+        authStateController.add(state);
+        print('User could not be signed in');
       }
+    } catch (e) {
+      print('Could not login - ${e.cause}');
+      final state = AuthState(authFlowStatus: AuthFlowStatus.failedLogin);
+      authStateController.add(state);
     }
   }
 

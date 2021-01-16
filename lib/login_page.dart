@@ -4,8 +4,9 @@ import 'auth_credentials.dart';
 class LoginPage extends StatefulWidget {
   final ValueChanged<LoginCredentials> didProvideCredentials;
   final VoidCallback shouldShowSignUp;
+  final message;
 
-  LoginPage({Key key, this.didProvideCredentials, this.shouldShowSignUp})
+  LoginPage({Key key, this.didProvideCredentials, this.shouldShowSignUp,this.message})
       : super(key: key);
   @override
   State<StatefulWidget> createState() => _LoginPageState();
@@ -15,7 +16,6 @@ class _LoginPageState extends State<LoginPage> {
   // 1
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  var _messageController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     // 2
@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // message TextField
-        Text("test message"),
+        Text(widget.message),
         // Username TextField
         TextField(
           controller: _usernameController,
